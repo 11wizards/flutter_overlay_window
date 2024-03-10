@@ -75,22 +75,22 @@ public class FlutterOverlayWindowPlugin implements
             }
             Integer height = call.argument("height");
             Integer width = call.argument("width");
-            String alignment = call.argument("alignment");
+            Integer minimumVisibleWidth = call.argument("minimumVisibleWidth");
+            Integer minimumVisibleHeight = call.argument("minimumVisibleHeight");
             String flag = call.argument("flag");
             String overlayTitle = call.argument("overlayTitle");
             String overlayContent = call.argument("overlayContent");
             String notificationVisibility = call.argument("notificationVisibility");
             boolean enableDrag = call.argument("enableDrag");
-            String positionGravity = call.argument("positionGravity");
 
             WindowSetup.width = width != null ? width : -1;
             WindowSetup.height = height != null ? height : -1;
+            WindowSetup.minimumVisibleWidth = minimumVisibleWidth == null ? 0 : minimumVisibleWidth;
+            WindowSetup.minimumVisibleHeight = minimumVisibleHeight == null ? 0 : minimumVisibleHeight;
             WindowSetup.enableDrag = enableDrag;
-            WindowSetup.setGravityFromAlignment(alignment != null ? alignment : "center");
             WindowSetup.setFlag(flag != null ? flag : "flagNotFocusable");
             WindowSetup.overlayTitle = overlayTitle;
             WindowSetup.overlayContent = overlayContent == null ? "" : overlayContent;
-            WindowSetup.positionGravity = positionGravity;
             WindowSetup.setNotificationVisibility(notificationVisibility);
 
             final Intent intent = new Intent(context, OverlayService.class);

@@ -30,26 +30,26 @@ class FlutterOverlayWindow {
   static Future<void> showOverlay({
     int height = WindowSize.fullCover,
     int width = WindowSize.matchParent,
-    OverlayAlignment alignment = OverlayAlignment.center,
+    int? minimumVisibleWidth,
+    int? minimumVisibleHeight,
     NotificationVisibility visibility = NotificationVisibility.visibilitySecret,
     OverlayFlag flag = OverlayFlag.defaultFlag,
     String overlayTitle = "overlay activated",
     String? overlayContent,
     bool enableDrag = false,
-    PositionGravity positionGravity = PositionGravity.none,
   }) async {
     await _channel.invokeMethod(
       'showOverlay',
       {
         "height": height,
         "width": width,
-        "alignment": alignment.name,
+        "minimumVisibleWidth": minimumVisibleWidth,
+        "minimumVisibleHeight": minimumVisibleHeight,
         "flag": flag.name,
         "overlayTitle": overlayTitle,
         "overlayContent": overlayContent,
         "enableDrag": enableDrag,
         "notificationVisibility": visibility.name,
-        "positionGravity": positionGravity.name,
       },
     );
   }
@@ -103,12 +103,19 @@ class FlutterOverlayWindow {
   }
 
   /// Update the overlay size in the screen
-  static Future<bool?> resizeOverlay(int width, int height) async {
+  static Future<bool?> resizeOverlay(
+    int width,
+    int height, {
+    int? minimumVisibleWidth,
+    int? minimumVisibleHeight,
+  }) async {
     final bool? _res = await _overlayChannel.invokeMethod<bool?>(
       'resizeOverlay',
       {
         'width': width,
         'height': height,
+        'minimumVisibleWidth': minimumVisibleWidth,
+        'minimumVisibleHeight': minimumVisibleHeight,
       },
     );
     return _res;
