@@ -77,22 +77,20 @@ public class OverlayService extends Service implements View.OnTouchListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mResources = getApplicationContext().getResources();
-        boolean isCloseWindow = intent.getBooleanExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, false);
-        if (isCloseWindow) {
-            if (windowManager != null) {
-                windowManager.removeView(flutterView);
-                windowManager = null;
-                flutterView.detachFromFlutterEngine();
-                stopSelf();
-            }
-            isRunning = false;
-            return START_STICKY;
-        }
+
         if (windowManager != null) {
             windowManager.removeView(flutterView);
             windowManager = null;
             flutterView.detachFromFlutterEngine();
-            stopSelf();
+        }
+
+        boolean isCloseWindow = intent.getBooleanExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, false);
+        if (isCloseWindow) {
+            if (windowManager != null) {
+                stopSelf();
+            }
+            isRunning = false;
+            return START_STICKY;
         }
         isRunning = true;
         Log.d("onStartCommand", "Service started");
@@ -100,7 +98,7 @@ public class OverlayService extends Service implements View.OnTouchListener {
         engine.getLifecycleChannel().appIsResumed();
         flutterView = new FlutterView(getApplicationContext(), new FlutterTextureView(getApplicationContext()));
         flutterView.attachToFlutterEngine(FlutterEngineCache.getInstance().get(OverlayConstants.CACHED_TAG));
-        flutterView.setFitsSystemWindows(true);
+        flutterView.setFitsSystemWindows(false);
         flutterView.setFocusable(true);
         flutterView.setFocusableInTouchMode(true);
         flutterView.setBackgroundColor(Color.TRANSPARENT);
@@ -146,7 +144,6 @@ public class OverlayService extends Service implements View.OnTouchListener {
             params.alpha = MAXIMUM_OPACITY_ALLOWED_FOR_S_AND_HIGHER;
         }
         params.gravity = Gravity.TOP | Gravity.LEFT;
-        flutterView.setFitsSystemWindows(false);
         flutterView.setOnTouchListener(this);
         windowManager.addView(flutterView, params);
         return START_STICKY;
