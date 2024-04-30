@@ -1,7 +1,6 @@
 package flutter.overlay.window.flutter_overlay_window;
 
 import android.app.Activity;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -104,8 +103,7 @@ public class FlutterOverlayWindowPlugin implements
         } else if (call.method.equals("closeOverlay")) {
             if (OverlayService.isRunning) {
                 final Intent i = new Intent(context, OverlayService.class);
-                i.putExtra(OverlayService.INTENT_EXTRA_IS_CLOSE_WINDOW, true);
-                context.startService(i);
+                context.stopService(i);
                 result.success(true);
             }
             return;
