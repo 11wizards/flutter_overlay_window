@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -294,7 +295,13 @@ public class OverlayService extends Service implements View.OnTouchListener {
                 .setContentIntent(pendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .build();
-        startForeground(OverlayConstants.NOTIFICATION_ID, notification);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            startForeground(OverlayConstants.NOTIFICATION_ID, notification);
+        } else {
+            startForeground(OverlayConstants.NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+        }
+
     }
 
     private void createNotificationChannel() {
